@@ -44,4 +44,9 @@ def test(index):
 test(linear_search([1,2,3,4,5],5))
 test(binary_search([1,2,3,4,5],4))
 
+
+
+#will be creating a node - linked list style
+
+
     
