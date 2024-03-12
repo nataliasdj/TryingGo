@@ -99,6 +99,73 @@ class Letsgo {
             System.out.println();
         }
     }
+    public static void pattern19(int n){
+        for(int i=0; i < n; i++){
+            for(int j=0; j < n-i; j++){
+                System.out.print("*");
+            }
+            for(int k=0; k < i*2; k++){
+                System.out.print(" ");
+            }
+            for(int l=0; l < n-i; l++){
+                System.out.print("*");
+            }   
+            System.out.println();
+        }
+
+        for(int x = 0; x < n; x++){
+            for(int m=0; m <= x; m++){
+                System.out.print("*");
+            }
+            for(int o=0; o < (n-x-1)*2; o++){
+                System.out.print(" ");
+            }
+            for(int p=0; p <= x; p++){
+                System.out.print("*");
+            }
+            System.out.println();
+        }
+        
+    }
+    public static void pattern20(int n){
+        for(int i = 0; i < n; i++){
+            for(int k = 0; k <= i; k++){
+                System.out.print("*");
+            }
+            for(int l = 0; l < (n-i-1)*2; l++){
+                System.out.print(" ");
+            }
+            for(int m = 0; m <= i; m++){
+                System.out.print("*");
+            }
+            System.out.println();
+        }
+        for(int j=1;j<n;j++){
+            for (int k = 0; k < n-j; k++){System.out.print("*");}
+            for (int l = 0; l < j*2; l++){System.out.print(" ");}
+            for (int m = 0; m<n-j; m++){System.out.print("*");}
+            System.out.println();
+        }
+    }
+    public static void pattern21(int n){
+        for(int i = 0; i<n; i++){System.out.print("*");}
+        for (int j = 0; j <n-2;j++){
+            int input = n;
+            System.out.println();
+            System.out.print("*");
+            while(input>2){
+                System.out.print(" ");
+                input-=1;
+            }
+            System.out.print("*");
+        }
+        System.out.println();
+        for(int j = 0; j<n; j++){System.out.print("*");}
+        
+    }
+    public static void pattern22(int n){
+        
+    }
     public static void main(String[] args) {
         // pattern12(5);
         // pattern13(5);
@@ -107,6 +174,10 @@ class Letsgo {
         // pattern16(5);
         // pattern17(5);
         // pattern18(5);
-        pattern18_way2(5);
+        // pattern18_way2(5);
+        // pattern19(5);
+        // pattern20(5);
+        pattern21(5);
     }
+
 }
