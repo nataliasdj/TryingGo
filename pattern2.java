@@ -163,8 +163,23 @@ class Letsgo {
         for(int j = 0; j<n; j++){System.out.print("*");}
         
     }
-    public static void pattern22(int n){
-        
+    public static void pattern22(int n){ //inner reducing pattern
+        int size = 2*n-1;
+        int[][] matrix = new int[size][size];
+        int top = 0;
+        int bottom = 2*n-1;
+        int left = 0;
+        int right = 2*n-1;
+        for (int i=left; i< right;i++){
+            for (int j = top; j < bottom;j++){
+                matrix[i][top] = n;
+            }
+            left+=1;
+            top+=1;
+            bottom-=1;
+            right-=1;
+            System.out.println();
+        }
     }
     public static void main(String[] args) {
         // pattern12(5);
@@ -177,7 +192,8 @@ class Letsgo {
         // pattern18_way2(5);
         // pattern19(5);
         // pattern20(5);
-        pattern21(5);
+        // pattern21(5);
+        pattern22(5);
     }
 
 }
