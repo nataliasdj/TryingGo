@@ -165,22 +165,44 @@ class Letsgo {
     }
     public static void pattern22(int n){ //inner reducing pattern
         int size = 2*n-1;
-        int[][] matrix = new int[size][size];
+        int[][] matrix = new int[size][size]; //row,col
         int top = 0;
-        int bottom = 2*n-1;
+        int bottom = size-1; // if its just size then it would be [0][5] - not about the loop, but about the index
         int left = 0;
-        int right = 2*n-1;
-        for (int i=left; i< right;i++){
-            for (int j = top; j < bottom;j++){
-                matrix[i][top] = n;
+        int right = size-1;
+        while (n > 0 && left <= right && top <= bottom){ //if didnt use <= (aka only used <) it will lead to 0 aka matrix not initally set
+            for (int i=left; i<= right;i++){ //top row
+                matrix[top][i]=n;
             }
-            left+=1;
+            // for(int i = right;i>= left;i--){ //bottom
+            //     matrix[bottom][i]=n;
+            // }
+            for(int i=left;i<=right;i++){
+                matrix[bottom][i]=n;
+            }
+            for(int i = top; i <= bottom; i++){ // left column
+                matrix[i][right] =n;
+            }
+            for(int i = bottom; i >= top; i--){ //right
+                matrix[i][left] = n;
+            }
+
+            left+=1; //imagine as a row
             top+=1;
             bottom-=1;
             right-=1;
+            n-=1;
+        }
+        for(int i = 0; i < size; i++){
+            for(int j=0;j<size;j++){
+                System.out.print(matrix[i][j]+" ");
+            }
             System.out.println();
         }
     }
+    
+    
+    
     public static void main(String[] args) {
         // pattern12(5);
         // pattern13(5);
