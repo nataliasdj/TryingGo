@@ -1,6 +1,6 @@
 from basics_of_basics import Linkedlist
 
-
+#atm, mergesort
 def merge(left,right): #the actual merge sorting them in process
     arr = []
     i,j=0,0
