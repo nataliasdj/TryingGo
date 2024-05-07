@@ -3,15 +3,127 @@ package main
 import (
 	"errors" // for error type
 	"fmt"
+	"strings"
 	"unicode/utf8"
 )
 
 func main() {
 	//basics()
 	//functions()
-	arrays()
+	//arrays_and_maps()
+	string_bytes_runes()
 }
-func arrays() {
+
+func string_bytes_runes() {
+	/*string represented by binary
+	strings in go is basically value reprented by bytes, if u want, better cast it to runes aka
+	rune is an alias for int32
+	*/
+	var myString = "résumé"
+	var myString2 = []rune("résumé") //rune is unicode point nums
+	var indexed = myString[0]
+	fmt.Printf("Index 0 (r)): %v, %T\n", indexed, indexed) //gives the ascii and type is uint
+	for k, v := range myString {
+		fmt.Println("Iterating résumé:", k, v) //gives index and ascii - also if u see output, it skips index 2 so why, basically the e accent takes up the 8 bits twice, bcs of utf8 encoding, r is 8 bits, e accent is 16 bits, s is 8, etc the last e accent is also 16 - is a special character
+	}
+	fmt.Printf("The length of 'myString' is %v\n", len(myString))  //length of bytes not chars
+	fmt.Printf("Index 1 (é)): %v, %T\n", myString[1], myString[1]) //it got seperated with its other 8 bits, read long paragraph on the loop, thus why but if u cast it to rune, then it wont get seperated, 233 is the right one
+	fmt.Printf("Index 1 (é) with rune): %v, %T\n", myString2[1], myString2[1])
+
+	//String building + string is immutable, cant be modified
+	var strSlice = []string{"h", "e", "l", "l", "o"}
+	var catStr = ""
+	for i := range strSlice {
+		//we create new string right which not efficient, so import built in string
+		catStr += strSlice[i] //create new string everytime
+	}
+	fmt.Printf("Before string builder: %v\n", catStr)
+	var strBuilder strings.Builder
+	for i := range strSlice {
+		//array allocated internally, values then appended
+		strBuilder.WriteString(strSlice[i]) //instead of +
+	}
+	var catStr2 = strBuilder.String() //then string is created
+	fmt.Printf("After string builder: %v\n", catStr2)
+
+}
+func arrays_and_maps() {
+	//can initalize like all 4
+	var arr [3]int32 //array is 3 & fixed like normal - default val of element types which is 0
+	var arr2 [3]int32 = [3]int32{1, 2, 3}
+	arr3 := [3]int32{4, 5, 6}
+	arr4 := [...]int32{7, 8, 9} // still arr fixed size 3, is inferred
+
+	arr[1] = 123
+	fmt.Println("array 1, index 0:", arr[0])
+	fmt.Println("array 1, index 1&2", arr[1:3])
+
+	fmt.Println("array 1, mem 0 location:", &arr[0]) // memory location if & - the first 4 bytes
+	fmt.Println("array 1, mem 1 location:", &arr[1])
+	fmt.Println("array 2:", arr2)
+	fmt.Println("array 3:", arr3)
+	fmt.Println("array 4:", arr4)
+
+	//SLICES------------
+	var intSlice []int32 = []int32{10, 11, 12, 13, 14} //omitting length value becomes a slice bcs no fixed length i think, so can do like so....
+	fmt.Printf("Length of slicearray is %v with capacity %v\n", len(intSlice), cap(intSlice))
+	intSlice = append(intSlice, 15) // store in diff memory, like arraylist ish, copy and put the appended in diff array
+	fmt.Printf("Length of slicearray after append is %v with capacity %v\n", len(intSlice), cap(intSlice))
+	//Although capacity is longer than length, cannot index if longer than curr length
+
+	var intSlice2 []int32 = []int32{16, 17}
+	intSlice = append(intSlice, intSlice2...) //,must use ... (spread operator)
+	fmt.Println("appending slice 1 to 2:", intSlice)
+
+	var intSlice3 []int32 = make([]int32, 3, 8) // specify length ex. 3 and optionally the capacity ex.8 otherwise capacity is default of length if not given, best practice put capacity if u know
+	fmt.Println("slice3:", intSlice3)
+
+	//MAPS
+	var myMap map[string]uint8 = make(map[string]uint8) //key string, val is unsigned int 8
+	fmt.Println("myMap:", myMap)
+	var myMap2 = map[string]uint8{"Jill": 23, "Claire": 45, "Ada": 35}
+	fmt.Println("map2, key Jill:", myMap2["Jill"])
+	fmt.Println("map2, key Wesker not in map", myMap2["Wesker"]) //key not exist aka gives default val, careful
+
+	var age, ok = myMap2["Chris"] //can return 2 val boolean
+	if ok {
+		fmt.Printf("The age of who you looking for %v\n", age)
+	} else {
+		fmt.Println("Invalid name")
+	}
+	delete(myMap2, "Claire") //built in delete (map,key) - no return val cuz delete by reference
+
+	//no order for maps when loops
+	for name := range myMap2 { //for loop key and val
+		fmt.Printf("Loop1: Name: %v\n", name)
+	}
+	for name, age := range myMap2 { //for loop key and val
+		fmt.Printf("Loop2: Name: %v, Age: %v\n", name, age)
+	}
+
+	for key, val := range arr {
+		fmt.Printf("Loop3: Index: %v, Value: %v\n", key, val)
+	}
+
+	var i int = 0 //closest you will get to a while loop cuz go dont have
+	fmt.Println("Demonstration of for that looks like while loop")
+	for i < 3 {
+		fmt.Println(i)
+		i = i + 1
+	}
+	fmt.Println("or 2nd loop syntax")
+	i = 0
+	for {
+		if i >= 3 {
+			break
+		}
+		fmt.Println(i)
+		i = i + 1
+	}
+	fmt.Println("or 3rd loop syntax")
+	for i := 0; i < 3; i++ {
+		fmt.Println(i)
+	}
 
 }
 func functions() {
