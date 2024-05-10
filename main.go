@@ -11,9 +11,171 @@ func main() {
 	//basics()
 	//functions()
 	//arrays_and_maps()
-	string_bytes_runes()
+	//string_bytes_runes()
+	//structs_interfaces()
+	pointers()
+}
+func square_formula(thing2 [5]float64) [5]float64 {
+	fmt.Printf("The memory location fo thing2 arr is: %p\n", &thing2)
+	for i := range thing2 {
+		thing2[i] = thing2[i] * thing2[i]
+	}
+	return thing2
+}
+func square_formula_with_ptr(thing2 *[5]float64) [5]float64 {
+	fmt.Printf("The memory location fo thing2 arr is: %p\n", &thing2)
+	for i := range thing2 {
+		thing2[i] = thing2[i] * thing2[i]
+	}
+	return *thing2
+}
+func pointers() {
+	/*ptr vars stores mem location*/
+	var ptr *int32 //takes 32/64 bits - ptr doesnt point to anything aka no address asigned to it
+	//also u may not dereference ptr if you havent asigned to anything
+	var ptr2 *int32 = new(int32) //ptr stores a mem location
+	var i int32
+	fmt.Printf("ptr points to nothing: %v\nptr2 already have a location: %v\ni (normal var): %v\nthe value ptr2 point to(aka after dereferencing - also 0 cuz its default for int32):%v\n", ptr, ptr2, i, *ptr2)
+	*ptr2 = 10 //after dereferencing then assign
+	fmt.Printf("The value ptr2 point to(aka after dereferencing and assigning):%v\n", *ptr2)
+
+	//can also do this
+	ptr2 = &i //which means ptr2 points to the memory address of i, so both p and i reference the same thing in memory
+	*ptr2 = 1 //will also change value of i
+
+	var k int32 = 2
+	i = k //is diff from the above cuz ke still has its own memory and its just copying i's value
+
+	//slices is like using pointers thus
+	var slice = []int32{1, 2, 3}
+	var sliceCopy = slice
+	sliceCopy[2] = 4
+	fmt.Println("Print slice:", slice)
+	fmt.Println("Print sliceCopy:", sliceCopy)
+	// why are they slice also changed if we only change slicecopy, is cuz slices copy pointers
+
+	//POINTERS AND
+	//see prints stmnt, thing1 and thing2 mem location differ aka they 2 diff arrays, so u can change thing 2 without affecting thing1 - this results in extra memory aka not needed, so u can use pointers so it wont waste em
+	var thing1 = [5]float64{1, 2, 3, 4, 5}
+	fmt.Printf("The memory location fo thing1 arr is: %p\n", &thing1)
+	var result [5]float64 = square_formula(thing1)
+	fmt.Printf("The result is: %v\n", result)
+	fmt.Printf("The value of thing1 is: %v\n", thing1)
+
+	//basically just do this - which thing1 and thing2 points the same
+	//look at placements of & and *, it was so hard to follow
+	var result_with_ptr [5]float64 = square_formula_with_ptr(&thing1)
+	fmt.Printf("The result is: %v\n", result_with_ptr)
+	fmt.Printf("The value of thing1 is: %v\n", thing1)
 }
 
+// STRUCTS is like your own type--------------------------------------------------------
+type gasEngine struct { //syntax = type(keyword) then your name of type then struct{} - can hold mixed types in forms of field which r defined by names, fields can also by another struct
+	mpg     uint8
+	gallons uint8
+}
+type owner struct {
+	name string
+}
+type gasEngineOwner struct { //usually u put it above the main but purpose of this is to learn i think better put here
+	mpg       uint8
+	gallons   uint8
+	ownerInfo owner //or just owner as below
+}
+type gasEngineOwner2_moreShorthand struct { //more shorthand
+	mpg     uint8
+	gallons uint8
+	owner
+	//can also just put int if you want, no name or anything
+	//see anonymous struct in the struct func
+}
+
+//the diff looks like this
+/*
+myEngine
+mpg: , gallons:, ownerInfo.name:
+but if use shorthanded v, looks like this
+mpg:, gallons:, name:
+*/
+
+// calc miles left in a gastank
+// see type gasEngine being used? thus why the method can use the field
+func (e gasEngine) milesLeft() uint8 {
+	return e.gallons * e.mpg
+}
+
+type electricEngine struct {
+	mpkw uint8 //miles per killowat
+	kwh  uint8 //how much charge left in battery
+}
+
+func (e electricEngine) milesLeft() uint8 {
+	return e.mpkw * e.kwh
+}
+
+func canMakeIt(e gasEngine, miles uint8) {
+	if miles <= e.milesLeft() {
+		fmt.Println("You can make it")
+	} else {
+		fmt.Println("Nope you need to refuel")
+	}
+}
+
+// at first can only take gas, what if we want a more general to take in electric too - aka interface{} so make engine interface - then just change the above method as below
+
+type the_interface_engine interface {
+	milesLeft() uint8 //specify the signature from the method signature
+}
+
+// to make this method work it just needs the milesleft() as per the interface
+func canMakeItAfterInterface(e the_interface_engine, miles uint8) {
+	if miles <= e.milesLeft() {
+		// return "You can make it"
+		fmt.Println("You can make it")
+	} else {
+		// return "You cant make it, refuel"
+		fmt.Println("Nope you need to refuel")
+	}
+}
+
+func structs_interfaces() {
+	var myEngineName gasEngine
+	fmt.Println("Printing gasEngine1 struct, not defined yet:", myEngineName.mpg, myEngineName.gallons)
+
+	var myEngineName2 gasEngine = gasEngine{mpg: 25, gallons: 15}
+	fmt.Println("Printing gasEngine2 struct, already defined:", myEngineName2.mpg, myEngineName2.gallons)
+
+	//if you want shorthand, all fields must be assigned cant only 1 - must be inorder
+	var myEngineName3 gasEngine = gasEngine{25, 15}
+	myEngineName3.gallons = 20
+	fmt.Println("Printing gasEngine3 struct, already defined by omission and if you want to change in the middle:", myEngineName3.mpg, myEngineName3.gallons)
+
+	var myEngineName4 gasEngineOwner = gasEngineOwner{25, 15, owner{"Alex"}}
+	fmt.Println("Printing gasEngine4 struct, inside struct:", myEngineName4.mpg, myEngineName4.gallons, myEngineName4.ownerInfo.name)
+
+	var myEngineName5 gasEngineOwner2_moreShorthand = gasEngineOwner2_moreShorthand{25, 15, owner{"Alex"}}
+	fmt.Println("Printing gasEngine4 struct, inside struct:", myEngineName5.mpg, myEngineName5.gallons, myEngineName5.name)
+
+	//anonymous struct, can define and initalize in same location - but not reusable
+	var myEngineAnon = struct {
+		mpg     uint8
+		gallons uint8
+	}{25, 15} // if want to create another struct must to this var = struct again
+	fmt.Println("Printing anonymous struct:", myEngineAnon.mpg, myEngineAnon.gallons)
+
+	//Structs can also have methods - func directly tied to the struct, and have access to struct instance itself
+	//is like classes, u instantiate a glass with the var bla bla like so below, then calling method
+	var myEngineName6 gasEngine = gasEngine{25, 15}
+	fmt.Println("Printing gasEngine6 using methods miles left:", myEngineName6.milesLeft())
+
+	var myEngineName7 electricEngine = electricEngine{25, 15}
+
+	//learnt it the hardway but i think you cant as follows the canmakeit has a fmt.println - it has no return value and i was using it like it has a return value
+	//fmt.Println("Printing myEngine7 using the interface allowing general usage no matter what struct was used:",canMakeItAfterInterface(...))
+	fmt.Println("Printing myEngine7 using the interface allowing general usage no matter what struct was used:")
+	canMakeItAfterInterface(myEngineName7, 50)
+
+}
 func string_bytes_runes() {
 	/*string represented by binary
 	strings in go is basically value reprented by bytes, if u want, better cast it to runes aka
@@ -41,7 +203,7 @@ func string_bytes_runes() {
 	var strBuilder strings.Builder
 	for i := range strSlice {
 		//array allocated internally, values then appended
-		strBuilder.WriteString(strSlice[i]) //instead of +
+		strBuilder.WriteString(strSlice[i]) //instead of +=
 	}
 	var catStr2 = strBuilder.String() //then string is created
 	fmt.Printf("After string builder: %v\n", catStr2)
