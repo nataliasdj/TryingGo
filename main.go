@@ -15,6 +15,8 @@ func main() {
 	//structs_interfaces()
 	pointers()
 }
+
+// https://www.youtube.com/watch?v=8uiZC0l4Ajw&t=3194s
 func square_formula(thing2 [5]float64) [5]float64 {
 	fmt.Printf("The memory location fo thing2 arr is: %p\n", &thing2)
 	for i := range thing2 {
